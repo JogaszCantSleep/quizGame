@@ -1,5 +1,7 @@
+using Microsoft.VisualBasic.Devices;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Media;
 
 namespace quizGame
 {
@@ -179,6 +181,18 @@ namespace quizGame
 
         private async void roundSelect(object? sender, EventArgs e)
         {
+            try
+            {
+                string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                string soundFilePath = Path.Combine(basePath, "audios", "start.wav");
+                SoundPlayer player = new SoundPlayer(soundFilePath);
+                player.PlaySync();
+            }
+            catch
+            {
+                MessageBox.Show("Error playing sound!");
+            }
+
             this.Controls.Clear();
 
             //Round buttons
@@ -247,6 +261,17 @@ namespace quizGame
         private void GenerateRounds(int numOfRounds)
         {
             //Generating rounds, nulling some variables and filling remainingQuestions List
+            try
+            {
+                string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                string soundFilePath = Path.Combine(basePath, "audios", "round.wav");
+                SoundPlayer player = new SoundPlayer(soundFilePath);
+                player.PlaySync();
+            }
+            catch
+            {
+                MessageBox.Show("Error playing sound!");
+            }
             playedRounds = 0;
             wrongCounter = 0;
             this.numOfRounds = numOfRounds;
@@ -261,6 +286,18 @@ namespace quizGame
             {
                 lblWrong3.Text = "X";
                 lblQuestion.Text = "you've got 3 incorrect points!\nGame Over!";
+                await Task.Delay(1);
+                try
+                {
+                    string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                    string soundFilePath = Path.Combine(basePath, "audios", "game_over.wav");
+                    SoundPlayer player = new SoundPlayer(soundFilePath);
+                    player.PlaySync();
+                }
+                catch
+                {
+                    MessageBox.Show("Error playing sound!");
+                }
                 await Task.Delay(5000);
                 this.Controls.Clear();
                 ShowStarterScreen();
@@ -334,7 +371,20 @@ namespace quizGame
 
             if (playedRounds > numOfRounds)
             {
-                MessageBox.Show("You've answered all the questions!\nYou Won!");
+                lblQuestion.Text = "You Won!";
+                await Task.Delay(1);
+                try
+                {
+                    string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                    string soundFilePath = Path.Combine(basePath, "audios", "win.wav");
+                    SoundPlayer player = new SoundPlayer(soundFilePath);
+                    player.PlaySync();
+                }
+                catch
+                {
+                    MessageBox.Show("Error playing sound!");
+                }
+                await Task.Delay(5000);
                 this.Controls.Clear();
                 ShowStarterScreen();
                 return;
@@ -487,29 +537,45 @@ namespace quizGame
             Button clickedButton = (Button)sender;
             int selectedAnswerIndex = (int)clickedButton.Tag;
 
-            // Update lblQuestion's text to indicate whether the answer is correct or incorrect
             if (selectedAnswerIndex == currentQuestion.CorrectAnswerIndex)
             {
                 lblQuestion.Text = "Correct!";
+                try
+                {
+                    string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                    string soundFilePath = Path.Combine(basePath, "audios", "correct.wav");
+                    SoundPlayer player = new SoundPlayer(soundFilePath);
+                    player.PlaySync();
+                }
+                catch
+                {
+                    MessageBox.Show("Error playing sound!");
+                }
             }
             else
             {
                 lblQuestion.Text = "Incorrect!";
+                try
+                {
+                    string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                    string soundFilePath = Path.Combine(basePath, "audios", "wrong.wav");
+                    SoundPlayer player = new SoundPlayer(soundFilePath);
+                    player.PlaySync();
+                }
+                catch
+                {
+                    MessageBox.Show("Error playing sound!");
+                }
                 wrongCounter += 1;
             }
 
-            // Remove the current question from the list
             remainingQuestions.RemoveAt(questionIndex);
-
-            // Wait for 1.5 seconds before moving to the next question
-            await Task.Delay(1500);
-
-            // Proceed to the next question or end the game
+            await Task.Delay(3000);
             Game();
         }
 
 
-        private void Timer1_Tick(object? sender, EventArgs e)
+        private async void Timer1_Tick(object? sender, EventArgs e)
         {
             //Handling timer
             if (seconds > 0)
@@ -521,9 +587,21 @@ namespace quizGame
             {
                 lblCountdown.Text = "00";
                 timer1.Stop();
-                MessageBox.Show("Ran out of time!!");
-                remainingQuestions.RemoveAt(questionIndex);
+                try
+                {
+                    string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                    string soundFilePath = Path.Combine(basePath, "audios", "time.wav");
+                    SoundPlayer player = new SoundPlayer(soundFilePath);
+                    player.PlaySync();
+                }
+                catch
+                {
+                    MessageBox.Show("Error playing sound!");
+                }
                 wrongCounter += 1;
+                lblQuestion.Text = "Ran out of time!";
+                await Task.Delay(3000);
+                remainingQuestions.RemoveAt(questionIndex);
                 Game();
             }
         }
