@@ -27,6 +27,27 @@
     <None Update="pics\background.jpg">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="pics\randomBackgrounds\possibleBackground_1.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="pics\randomBackgrounds\possibleBackground_2.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="pics\randomBackgrounds\possibleBackground_3.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="pics\randomBackgrounds\possibleBackground_4.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="pics\randomBackgrounds\possibleBackground_5.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="pics\randomBackgrounds\possibleBackground_6.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="pics\randomBackgrounds\possibleBackground_7.jpg">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="pics\startBackground.gif">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

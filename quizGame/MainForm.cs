@@ -5,7 +5,7 @@ namespace quizGame
 {
     public partial class MainForm : Form
     {
-        private int seconds = 10;
+        private int seconds;
         private Label lblCountdown;
         private System.Windows.Forms.Timer timer1;
 
@@ -23,13 +23,27 @@ namespace quizGame
             }
         }
 
+        //Random backgrounds
+        private List<Image> randomBackgrounds = new List<Image>
+        {
+            Image.FromFile(Path.Combine(Application.StartupPath, "pics", "randomBackgrounds", "possibleBackground_1.jpg")),
+            Image.FromFile(Path.Combine(Application.StartupPath, "pics", "randomBackgrounds", "possibleBackground_2.jpg")),
+            Image.FromFile(Path.Combine(Application.StartupPath, "pics", "randomBackgrounds", "possibleBackground_3.jpg")),
+            Image.FromFile(Path.Combine(Application.StartupPath, "pics", "randomBackgrounds", "possibleBackground_4.jpg")),
+            Image.FromFile(Path.Combine(Application.StartupPath, "pics", "randomBackgrounds", "possibleBackground_5.jpg")),
+            Image.FromFile(Path.Combine(Application.StartupPath, "pics", "randomBackgrounds", "possibleBackground_6.jpg")),
+            Image.FromFile(Path.Combine(Application.StartupPath, "pics", "randomBackgrounds", "possibleBackground_7.jpg"))
+        };
+
         private List<Question> questions;
         private List<Question> remainingQuestions;
+        private int questionIndex;
         private Question currentQuestion;
-
+        private int wrongCounter;
         private int numOfRounds;
-
         private int playedRounds;
+        private Label lblQuestion;
+        private Label lblWrong3;
 
         public MainForm()
         {
@@ -51,6 +65,7 @@ namespace quizGame
 
         private void ShowStarterScreen()
         {
+
             //Questions
             questions = new List<Question>
             {
@@ -166,6 +181,7 @@ namespace quizGame
         {
             this.Controls.Clear();
 
+            //Round buttons
             Button btnOption1 = new Button
             {
                 Text = "5 rounds",
@@ -230,7 +246,9 @@ namespace quizGame
 
         private void GenerateRounds(int numOfRounds)
         {
+            //Generating rounds, nulling some variables and filling remainingQuestions List
             playedRounds = 0;
+            wrongCounter = 0;
             this.numOfRounds = numOfRounds;
             this.Controls.Clear();
             remainingQuestions = new List<Question>(questions);
@@ -239,22 +257,92 @@ namespace quizGame
 
         private async void Game()
         {
-            this.Controls.Clear();
-
-            playedRounds += 1;
-
-            //Checking played number of rounds
-
-            if (playedRounds > numOfRounds)
+            if (wrongCounter == 3)
             {
-                MessageBox.Show("Game Over! You've answered all the questions.");
+                lblWrong3.Text = "X";
+                lblQuestion.Text = "you've got 3 incorrect points!\nGame Over!";
+                await Task.Delay(5000);
                 this.Controls.Clear();
                 ShowStarterScreen();
                 return;
             }
 
-            //Adding the Timer
+            this.Controls.Clear();
 
+            seconds = 10;
+            playedRounds += 1;
+
+            //Wrong counters
+            Label lblWrong1 = new Label
+            {
+                Text = "",
+                Font = new Font("Showcard Gothic", 40),
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.White,
+                BackColor = Color.Black,
+                Size = new Size(100, 100),
+                Location = new Point(100, 350),
+            };
+
+            lblWrong1.Paint += (sender, e) =>
+            {
+                e.Graphics.DrawRectangle(new Pen(Color.White, 6), 0, 0, lblWrong1.Width - 0, lblWrong1.Height - 0);
+            };
+
+            this.Controls.Add(lblWrong1);
+
+            Label lblWrong2 = new Label
+            {
+                Text = "",
+                Font = new Font("Showcard Gothic", 40),
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.White,
+                BackColor = Color.Black,
+                Size = new Size(100, 100),
+                Location = new Point(250, 350),
+            };
+
+            lblWrong2.Paint += (sender, e) =>
+            {
+                e.Graphics.DrawRectangle(new Pen(Color.White, 6), 0, 0, lblWrong2.Width - 0, lblWrong2.Height - 0);
+            };
+
+            this.Controls.Add(lblWrong2);
+
+            lblWrong3 = new Label
+            {
+                Text = "",
+                Font = new Font("Showcard Gothic", 40),
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.White,
+                BackColor = Color.Black,
+                Size = new Size(100, 100),
+                Location = new Point(400, 350),
+            };
+
+            lblWrong3.Paint += (sender, e) =>
+            {
+                e.Graphics.DrawRectangle(new Pen(Color.White, 6), 0, 0, lblWrong3.Width - 0, lblWrong3.Height - 0);
+            };
+
+            this.Controls.Add(lblWrong3);
+
+            if (wrongCounter >= 1) lblWrong1.Text = "X";
+            if (wrongCounter >= 2) lblWrong2.Text = "X";
+
+            //Checking played number of rounds
+
+            if (playedRounds > numOfRounds)
+            {
+                MessageBox.Show("You've answered all the questions!\nYou Won!");
+                this.Controls.Clear();
+                ShowStarterScreen();
+                return;
+            }
+
+            ChangeBackground();
+
+            //Adding the Timer
             lblCountdown = new Label
             {
                 Font = new Font("Showcard Gothic", 30),
@@ -281,67 +369,149 @@ namespace quizGame
             timer1.Start();
 
             //Whole Game
+            Random rand = new Random();
+            questionIndex = rand.Next(remainingQuestions.Count);
+            currentQuestion = remainingQuestions[questionIndex];
 
-            for (int i = 0; i < numOfRounds; i++)
+            //Adding the Question
+            lblQuestion = new Label
             {
-                Random rand = new Random();
-                int questionIndex = rand.Next(remainingQuestions.Count);
-                currentQuestion = remainingQuestions[questionIndex];
+                Text = currentQuestion.Text,
+                Font = new Font("Showcard Gothic", 20),
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.White,
+                BackColor = Color.Black,
+                Size = new Size(500, 150),
+                Location = new Point(50, 150),
+            };
 
-                //Adding the Question
+            lblQuestion.Paint += (sender, e) =>
+            {
+                e.Graphics.DrawRectangle(new Pen(Color.White, 6), 0, 0, lblQuestion.Width - 0, lblQuestion.Height - 0);
+            };
 
-                Label lblQuestion = new Label
-                {
-                    Text = currentQuestion.Text,
-                    Font = new Font("Showcard Gothic", 20),
-                    ForeColor = Color.White,
-                    BackColor = Color.Transparent,
-                    Size = new Size(500, 100),
-                    Location = new Point(50, 200),
-                };
+            this.Controls.Add(lblQuestion);
 
-                this.Controls.Add(lblQuestion);
+            // Answer buttons
+            Button btnAnswer1 = new Button
+            {
+                Text = currentQuestion.Answers[0],
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.White,
+                BackColor = Color.Black,
+                Cursor = Cursors.Hand,
+                Font = new Font("Arial", 14),
+                Size = new Size(200, 100),
+                Location = new Point(50, 500),
+                Tag = 0
+            };
 
-                //Adding the Answer Buttons
+            btnAnswer1.FlatStyle = FlatStyle.Flat;
+            btnAnswer1.FlatAppearance.BorderSize = 2;
+            btnAnswer1.FlatAppearance.BorderColor = Color.White;
+            btnAnswer1.FlatAppearance.MouseOverBackColor = Color.Gray;
+            btnAnswer1.FlatAppearance.MouseDownBackColor = Color.DarkGray;
 
-                Button[] answerButtons = new Button[4];
-                for (int h = 0; h < 4; h++)
-                {
-                    answerButtons[h] = new Button
-                    {
-                        Text = currentQuestion.Answers[h],
-                        Font = new Font("Arial", 14),
-                        Size = new Size(400, 50),
-                        Location = new Point(50, 300 + (h * 60)),
-                        Tag = h
-                    };
-                    answerButtons[h].Click += (sender, e) =>
-                    {
-                        Button clickedButton = (Button)sender;
-                        int selectedAnswerIndex = (int)clickedButton.Tag;
+            btnAnswer1.Click += AnswerButton_Click;
+            this.Controls.Add(btnAnswer1);
 
-                        //Checking if answer is correct
+            Button btnAnswer2 = new Button
+            {
+                Text = currentQuestion.Answers[1],
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.White,
+                BackColor = Color.Black,
+                Cursor = Cursors.Hand,
+                Font = new Font("Arial", 14),
+                Size = new Size(200, 100),
+                Location = new Point(50, 650),
+                Tag = 1
+            };
 
-                        if (selectedAnswerIndex == currentQuestion.CorrectAnswerIndex)
-                        {
-                            MessageBox.Show("Correct answer!");
-                            remainingQuestions.RemoveAt(questionIndex);
-                            Game();
-                        }
-                        else
-                        {
-                            MessageBox.Show("Incorrect answer!");
-                            remainingQuestions.RemoveAt(questionIndex);
-                            Game();
-                        }
-                    };
-                    this.Controls.Add(answerButtons[h]);
-                }
-            }
+            btnAnswer2.FlatStyle = FlatStyle.Flat;
+            btnAnswer2.FlatAppearance.BorderSize = 2;
+            btnAnswer2.FlatAppearance.BorderColor = Color.White;
+            btnAnswer2.FlatAppearance.MouseOverBackColor = Color.Gray;
+            btnAnswer2.FlatAppearance.MouseDownBackColor = Color.DarkGray;
+
+            btnAnswer2.Click += AnswerButton_Click;
+            this.Controls.Add(btnAnswer2);
+
+            Button btnAnswer3 = new Button
+            {
+                Text = currentQuestion.Answers[2],
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.White,
+                BackColor = Color.Black,
+                Cursor = Cursors.Hand,
+                Font = new Font("Arial", 14),
+                Size = new Size(200, 100),
+                Location = new Point(350, 500),
+                Tag = 2
+            };
+
+            btnAnswer3.FlatStyle = FlatStyle.Flat;
+            btnAnswer3.FlatAppearance.BorderSize = 2;
+            btnAnswer3.FlatAppearance.BorderColor = Color.White;
+            btnAnswer3.FlatAppearance.MouseOverBackColor = Color.Gray;
+            btnAnswer3.FlatAppearance.MouseDownBackColor = Color.DarkGray;
+
+            btnAnswer3.Click += AnswerButton_Click;
+            this.Controls.Add(btnAnswer3);
+
+            Button btnAnswer4 = new Button
+            {
+                Text = currentQuestion.Answers[3],
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.White,
+                BackColor = Color.Black,
+                Cursor = Cursors.Hand,
+                Font = new Font("Arial", 14),
+                Size = new Size(200, 100),
+                Location = new Point(350, 650),
+                Tag = 3
+            };
+            btnAnswer4.FlatStyle = FlatStyle.Flat;
+            btnAnswer4.FlatAppearance.BorderSize = 2;
+            btnAnswer4.FlatAppearance.BorderColor = Color.White;
+            btnAnswer4.FlatAppearance.MouseOverBackColor = Color.Gray;
+            btnAnswer4.FlatAppearance.MouseDownBackColor = Color.DarkGray;
+
+            btnAnswer4.Click += AnswerButton_Click;
+            this.Controls.Add(btnAnswer4);
         }
+
+        private async void AnswerButton_Click(object sender, EventArgs e)
+        {
+            timer1.Stop();
+            Button clickedButton = (Button)sender;
+            int selectedAnswerIndex = (int)clickedButton.Tag;
+
+            // Update lblQuestion's text to indicate whether the answer is correct or incorrect
+            if (selectedAnswerIndex == currentQuestion.CorrectAnswerIndex)
+            {
+                lblQuestion.Text = "Correct!";
+            }
+            else
+            {
+                lblQuestion.Text = "Incorrect!";
+                wrongCounter += 1;
+            }
+
+            // Remove the current question from the list
+            remainingQuestions.RemoveAt(questionIndex);
+
+            // Wait for 1.5 seconds before moving to the next question
+            await Task.Delay(1500);
+
+            // Proceed to the next question or end the game
+            Game();
+        }
+
 
         private void Timer1_Tick(object? sender, EventArgs e)
         {
+            //Handling timer
             if (seconds > 0)
             {
                 seconds--;
@@ -351,7 +521,19 @@ namespace quizGame
             {
                 lblCountdown.Text = "00";
                 timer1.Stop();
+                MessageBox.Show("Ran out of time!!");
+                remainingQuestions.RemoveAt(questionIndex);
+                wrongCounter += 1;
+                Game();
             }
+        }
+
+        private void ChangeBackground()
+        {
+            Random rand = new Random();
+            int randomIndex = rand.Next(randomBackgrounds.Count);
+            this.BackgroundImage = randomBackgrounds[randomIndex];
+            this.BackgroundImageLayout = ImageLayout.Stretch;
         }
     }
 }
