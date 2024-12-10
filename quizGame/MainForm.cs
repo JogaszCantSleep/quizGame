@@ -2,6 +2,7 @@ using Microsoft.VisualBasic.Devices;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Media;
+using System.Numerics;
 
 namespace quizGame
 {
@@ -46,6 +47,8 @@ namespace quizGame
         private int playedRounds;
         private Label lblQuestion;
         private Label lblWrong3;
+        private SoundPlayer ticking;
+
 
         public MainForm()
         {
@@ -62,12 +65,11 @@ namespace quizGame
             this.FormBorderStyle = FormBorderStyle.Fixed3D;
             this.StartPosition = FormStartPosition.CenterScreen;
             this.MaximizeBox = false;
-            this.Text = "Quiz game";
+            this.Text = "Quizimodo";
         }
 
         private void ShowStarterScreen()
         {
-
             //Questions
             questions = new List<Question>
             {
@@ -141,39 +143,55 @@ namespace quizGame
                 Location = new Point(50, 100),
             };
 
-            //Author
-            Label lblAuthor = new Label
-            {
-                Text = "by Jogasz",
-                TextAlign = ContentAlignment.MiddleCenter,
-                Font = new Font("Showcard Gothic", 20),
-                ForeColor = Color.Gray,
-                BackColor = Color.Transparent,
-                Size = new Size(200, 50),
-                Location = new Point(0, 750),
-            };
-
             //Start button
             Button btnStart = new Button
             {
-                Text = "Start",
+                Text = "",
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new Font("Showcard Gothic", 40),
-                BackColor = Color.Black,
-                ForeColor = Color.White,
+                BackColor = Color.Transparent,
+                ForeColor = Color.Transparent,
                 Cursor = Cursors.Hand,
                 Size = new Size(400, 150),
                 Location = new Point(100, 500),
             };
 
             btnStart.FlatStyle = FlatStyle.Flat;
-            btnStart.FlatAppearance.BorderSize = 2;
-            btnStart.FlatAppearance.BorderColor = Color.White;
-            btnStart.FlatAppearance.MouseOverBackColor = Color.Gray;
-            btnStart.FlatAppearance.MouseDownBackColor = Color.DarkGray;
+            btnStart.FlatAppearance.BorderSize = 0;
+
+            string btnStartDefault = Path.Combine(Application.StartupPath, "pics", "btnStart", "default.png");
+            btnStart.BackgroundImage = Image.FromFile(btnStartDefault);
+            btnStart.BackgroundImageLayout = ImageLayout.Stretch;
+
+            btnStart.MouseEnter += (s, e) =>
+            {
+                string btnStartHover = Path.Combine(Application.StartupPath, "pics", "btnStart", "hover.png");
+                btnStart.BackgroundImage = Image.FromFile(btnStartHover);
+                btnStart.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnStart.MouseLeave += (s, e) =>
+            {
+                string btnStartDefault = Path.Combine(Application.StartupPath, "pics", "btnStart", "default.png");
+                btnStart.BackgroundImage = Image.FromFile(btnStartDefault);
+                btnStart.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnStart.MouseDown += (s, e) =>
+            {
+                string btnStartClick = Path.Combine(Application.StartupPath, "pics", "btnStart", "click.png");
+                btnStart.BackgroundImage = Image.FromFile(btnStartClick);
+                btnStart.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnStart.MouseUp += (s, e) =>
+            {
+                string btnStartHover = Path.Combine(Application.StartupPath, "pics", "btnStart", "hover.png");
+                btnStart.BackgroundImage = Image.FromFile(btnStartHover);
+                btnStart.BackgroundImageLayout = ImageLayout.Stretch;
+            };
 
             this.Controls.Add(lblTitle);
-            this.Controls.Add(lblAuthor);
             this.Controls.Add(btnStart);
 
             btnStart.Click += roundSelect;
@@ -186,7 +204,7 @@ namespace quizGame
                 string basePath = AppDomain.CurrentDomain.BaseDirectory;
                 string soundFilePath = Path.Combine(basePath, "audios", "start.wav");
                 SoundPlayer player = new SoundPlayer(soundFilePath);
-                player.PlaySync();
+                player.Play();
             }
             catch
             {
@@ -196,66 +214,156 @@ namespace quizGame
             this.Controls.Clear();
 
             //Round buttons
-            Button btnOption1 = new Button
+            Button btnRound5 = new Button
             {
-                Text = "5 rounds",
+                Text = "",
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new Font("Showcard Gothic", 50),
-                BackColor = Color.Black,
-                ForeColor = Color.White,
+                BackColor = Color.Transparent,
+                ForeColor = Color.Transparent,
                 Cursor = Cursors.Hand,
                 Size = new Size(400, 150),
                 Location = new Point(100, 100),
             };
 
-            btnOption1.FlatStyle = FlatStyle.Flat;
-            btnOption1.FlatAppearance.BorderSize = 2;
-            btnOption1.FlatAppearance.BorderColor = Color.White;
-            btnOption1.FlatAppearance.MouseOverBackColor = Color.Gray;
-            btnOption1.FlatAppearance.MouseDownBackColor = Color.DarkGray;
-            btnOption1.Click += (s, e) => GenerateRounds(5);
+            btnRound5.FlatStyle = FlatStyle.Flat;
+            btnRound5.FlatAppearance.BorderSize = 0;
 
-            Button btnOption2 = new Button
+            string btnRound5default = Path.Combine(Application.StartupPath, "pics", "btnRound", "round5default.png");
+            btnRound5.BackgroundImage = Image.FromFile(btnRound5default);
+            btnRound5.BackgroundImageLayout = ImageLayout.Stretch;
+
+            btnRound5.MouseEnter += (s, e) =>
             {
-                Text = "7 rounds",
+                string btnRound5hover = Path.Combine(Application.StartupPath, "pics", "btnRound", "round5hover.png");
+                btnRound5.BackgroundImage = Image.FromFile(btnRound5hover);
+                btnRound5.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnRound5.MouseLeave += (s, e) =>
+            {
+                string btnRound5default = Path.Combine(Application.StartupPath, "pics", "btnRound", "round5default.png");
+                btnRound5.BackgroundImage = Image.FromFile(btnRound5default);
+                btnRound5.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnRound5.MouseDown += (s, e) =>
+            {
+                string btnRound5click = Path.Combine(Application.StartupPath, "pics", "btnRound", "round5click.png");
+                btnRound5.BackgroundImage = Image.FromFile(btnRound5click);
+                btnRound5.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnRound5.MouseUp += (s, e) =>
+            {
+                string btnRound5hover = Path.Combine(Application.StartupPath, "pics", "btnRound", "round5hover.png");
+                btnRound5.BackgroundImage = Image.FromFile(btnRound5hover);
+                btnRound5.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnRound5.Click += (s, e) => GenerateRounds(5);
+
+            Button btnRound7 = new Button
+            {
+                Text = "",
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new Font("Showcard Gothic", 50),
-                BackColor = Color.Black,
-                ForeColor = Color.White,
+                BackColor = Color.Transparent,
+                ForeColor = Color.Transparent,
                 Cursor = Cursors.Hand,
                 Size = new Size(400, 150),
                 Location = new Point(100, 300),
             };
 
-            btnOption2.FlatStyle = FlatStyle.Flat;
-            btnOption2.FlatAppearance.BorderSize = 2;
-            btnOption2.FlatAppearance.BorderColor = Color.White;
-            btnOption2.FlatAppearance.MouseOverBackColor = Color.Gray;
-            btnOption2.FlatAppearance.MouseDownBackColor = Color.DarkGray;
-            btnOption2.Click += (s, e) => GenerateRounds(7);
+            btnRound7.FlatStyle = FlatStyle.Flat;
+            btnRound7.FlatAppearance.BorderSize = 0;
 
-            Button btnOption3 = new Button
+            string btnRound7default = Path.Combine(Application.StartupPath, "pics", "btnRound", "round7default.png");
+            btnRound7.BackgroundImage = Image.FromFile(btnRound7default);
+            btnRound7.BackgroundImageLayout = ImageLayout.Stretch;
+
+            btnRound7.MouseEnter += (s, e) =>
             {
-                Text = "12 rounds",
+                string btnRound7hover = Path.Combine(Application.StartupPath, "pics", "btnRound", "round7hover.png");
+                btnRound7.BackgroundImage = Image.FromFile(btnRound7hover);
+                btnRound7.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnRound7.MouseLeave += (s, e) =>
+            {
+                string btnRound7default = Path.Combine(Application.StartupPath, "pics", "btnRound", "round7default.png");
+                btnRound7.BackgroundImage = Image.FromFile(btnRound7default);
+                btnRound7.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnRound7.MouseDown += (s, e) =>
+            {
+                string btnRound7click = Path.Combine(Application.StartupPath, "pics", "btnRound", "round7click.png");
+                btnRound7.BackgroundImage = Image.FromFile(btnRound7click);
+                btnRound7.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnRound7.MouseUp += (s, e) =>
+            {
+                string btnRound7hover = Path.Combine(Application.StartupPath, "pics", "btnRound", "round7hover.png");
+                btnRound7.BackgroundImage = Image.FromFile(btnRound7hover);
+                btnRound7.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnRound7.Click += (s, e) => GenerateRounds(7);
+
+            Button btnRound12 = new Button
+            {
+                Text = "",
                 TextAlign = ContentAlignment.MiddleCenter,
                 Font = new Font("Showcard Gothic", 50),
-                BackColor = Color.Black,
-                ForeColor = Color.White,
+                BackColor = Color.Transparent,
+                ForeColor = Color.Transparent,
                 Cursor = Cursors.Hand,
                 Size = new Size(400, 150),
                 Location = new Point(100, 500),
             };
 
-            btnOption3.FlatStyle = FlatStyle.Flat;
-            btnOption3.FlatAppearance.BorderSize = 2;
-            btnOption3.FlatAppearance.BorderColor = Color.White;
-            btnOption3.FlatAppearance.MouseOverBackColor = Color.Gray;
-            btnOption3.FlatAppearance.MouseDownBackColor = Color.DarkGray;
-            btnOption3.Click += (s, e) => GenerateRounds(12);
+            btnRound12.FlatStyle = FlatStyle.Flat;
+            btnRound12.FlatAppearance.BorderSize = 0;
 
-            this.Controls.Add(btnOption1);
-            this.Controls.Add(btnOption2);
-            this.Controls.Add(btnOption3);
+            string btnRound12default = Path.Combine(Application.StartupPath, "pics", "btnRound", "round12default.png");
+            btnRound12.BackgroundImage = Image.FromFile(btnRound12default);
+            btnRound12.BackgroundImageLayout = ImageLayout.Stretch;
+
+            btnRound12.MouseEnter += (s, e) =>
+            {
+                string btnRound12hover = Path.Combine(Application.StartupPath, "pics", "btnRound", "round12hover.png");
+                btnRound12.BackgroundImage = Image.FromFile(btnRound12hover);
+                btnRound12.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnRound12.MouseLeave += (s, e) =>
+            {
+                string btnRound12default = Path.Combine(Application.StartupPath, "pics", "btnRound", "round12default.png");
+                btnRound12.BackgroundImage = Image.FromFile(btnRound12default);
+                btnRound12.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnRound12.MouseDown += (s, e) =>
+            {
+                string btnRound12click = Path.Combine(Application.StartupPath, "pics", "btnRound", "round12click.png");
+                btnRound12.BackgroundImage = Image.FromFile(btnRound12click);
+                btnRound12.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnRound12.MouseUp += (s, e) =>
+            {
+                string btnRound12hover = Path.Combine(Application.StartupPath, "pics", "btnRound", "round12hover.png");
+                btnRound12.BackgroundImage = Image.FromFile(btnRound12hover);
+                btnRound12.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnRound12.Click += (s, e) => GenerateRounds(12);
+
+            this.Controls.Add(btnRound5);
+            this.Controls.Add(btnRound7);
+            this.Controls.Add(btnRound12);
         }
 
         private void GenerateRounds(int numOfRounds)
@@ -292,7 +400,28 @@ namespace quizGame
                     string basePath = AppDomain.CurrentDomain.BaseDirectory;
                     string soundFilePath = Path.Combine(basePath, "audios", "game_over.wav");
                     SoundPlayer player = new SoundPlayer(soundFilePath);
-                    player.PlaySync();
+                    player.Play();
+                }
+                catch
+                {
+                    MessageBox.Show("Error playing sound!");
+                }
+                await Task.Delay(5000);
+                this.Controls.Clear();
+                ShowStarterScreen();
+                return;
+            }
+
+            if (playedRounds == numOfRounds)
+            {
+                lblQuestion.Text = "You Won!";
+                await Task.Delay(1);
+                try
+                {
+                    string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                    string soundFilePath = Path.Combine(basePath, "audios", "win.wav");
+                    SoundPlayer player = new SoundPlayer(soundFilePath);
+                    player.Play();
                 }
                 catch
                 {
@@ -306,89 +435,102 @@ namespace quizGame
 
             this.Controls.Clear();
 
+            try
+            {
+                string basePath = AppDomain.CurrentDomain.BaseDirectory;
+                string soundFilePath = Path.Combine(basePath, "audios", "time_passing.wav");
+                ticking = new SoundPlayer(soundFilePath);
+                ticking.Play();
+            }
+            catch
+            {
+                MessageBox.Show("Error playing sound!");
+            }
+
             seconds = 10;
             playedRounds += 1;
+
+            //Progress
+            Label lblProgress = new Label
+            {
+                Text = $"{playedRounds}/{numOfRounds}",
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.White,
+                BackColor = Color.Black,
+                Cursor = Cursors.Hand,
+                Font = new Font("Showcard Gothic", 30),
+                Size = new Size(100, 60),
+                Location = new Point(500, 0),
+                Tag = 0
+            };
+
+            lblProgress.FlatStyle = FlatStyle.Flat;
+
+            this.Controls.Add(lblProgress);
 
             //Wrong counters
             Label lblWrong1 = new Label
             {
                 Text = "",
-                Font = new Font("Showcard Gothic", 40),
+                Font = new Font("Showcard Gothic", 60),
                 TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Color.White,
-                BackColor = Color.Black,
+                ForeColor = Color.Red,
+                BackColor = Color.Transparent,
                 Size = new Size(100, 100),
                 Location = new Point(100, 350),
+                Padding = new Padding(4, 2, 0, 0)
             };
 
-            lblWrong1.Paint += (sender, e) =>
-            {
-                e.Graphics.DrawRectangle(new Pen(Color.White, 6), 0, 0, lblWrong1.Width - 0, lblWrong1.Height - 0);
-            };
+            lblWrong1.FlatStyle = FlatStyle.Flat;
+
+            string wrong1ImagePath = Path.Combine(Application.StartupPath, "pics", "wrong.png");
+            lblWrong1.BackgroundImage = Image.FromFile(wrong1ImagePath);
+            lblWrong1.BackgroundImageLayout = ImageLayout.Stretch;
 
             this.Controls.Add(lblWrong1);
 
             Label lblWrong2 = new Label
             {
                 Text = "",
-                Font = new Font("Showcard Gothic", 40),
+                Font = new Font("Showcard Gothic", 60),
                 TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Color.White,
-                BackColor = Color.Black,
+                ForeColor = Color.Red,
+                BackColor = Color.Transparent,
                 Size = new Size(100, 100),
                 Location = new Point(250, 350),
+                Padding = new Padding(4, 2, 0, 0)
             };
 
-            lblWrong2.Paint += (sender, e) =>
-            {
-                e.Graphics.DrawRectangle(new Pen(Color.White, 6), 0, 0, lblWrong2.Width - 0, lblWrong2.Height - 0);
-            };
+            lblWrong2.FlatStyle = FlatStyle.Flat;
+
+            string wrong2ImagePath = Path.Combine(Application.StartupPath, "pics", "wrong.png");
+            lblWrong2.BackgroundImage = Image.FromFile(wrong2ImagePath);
+            lblWrong2.BackgroundImageLayout = ImageLayout.Stretch;
 
             this.Controls.Add(lblWrong2);
 
             lblWrong3 = new Label
             {
                 Text = "",
-                Font = new Font("Showcard Gothic", 40),
+                Font = new Font("Showcard Gothic", 60),
                 TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Color.White,
-                BackColor = Color.Black,
+                ForeColor = Color.Red,
+                BackColor = Color.Transparent,
                 Size = new Size(100, 100),
                 Location = new Point(400, 350),
+                Padding = new Padding(4, 2, 0, 0)
             };
 
-            lblWrong3.Paint += (sender, e) =>
-            {
-                e.Graphics.DrawRectangle(new Pen(Color.White, 6), 0, 0, lblWrong3.Width - 0, lblWrong3.Height - 0);
-            };
+            lblWrong3.FlatStyle = FlatStyle.Flat;
+
+            string wrong3ImagePath = Path.Combine(Application.StartupPath, "pics", "wrong.png");
+            lblWrong3.BackgroundImage = Image.FromFile(wrong3ImagePath);
+            lblWrong3.BackgroundImageLayout = ImageLayout.Stretch;
 
             this.Controls.Add(lblWrong3);
 
             if (wrongCounter >= 1) lblWrong1.Text = "X";
             if (wrongCounter >= 2) lblWrong2.Text = "X";
-
-            //Checking played number of rounds
-
-            if (playedRounds > numOfRounds)
-            {
-                lblQuestion.Text = "You Won!";
-                await Task.Delay(1);
-                try
-                {
-                    string basePath = AppDomain.CurrentDomain.BaseDirectory;
-                    string soundFilePath = Path.Combine(basePath, "audios", "win.wav");
-                    SoundPlayer player = new SoundPlayer(soundFilePath);
-                    player.PlaySync();
-                }
-                catch
-                {
-                    MessageBox.Show("Error playing sound!");
-                }
-                await Task.Delay(5000);
-                this.Controls.Clear();
-                ShowStarterScreen();
-                return;
-            }
 
             ChangeBackground();
 
@@ -397,17 +539,18 @@ namespace quizGame
             {
                 Font = new Font("Showcard Gothic", 30),
                 Location = new Point(250, 0),
-                Size = new Size(100, 100),
-                TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Color.White,
-                BackColor = Color.Black,
+                Size = new Size(100, 80),
+                TextAlign = ContentAlignment.TopCenter,
+                ForeColor = Color.Black,
+                BackColor = Color.Transparent,
                 Text = seconds.ToString("D2")
             };
 
-            lblCountdown.Paint += (sender, e) =>
-            {
-                e.Graphics.DrawRectangle(new Pen(Color.White, 6), 0, 0, lblCountdown.Width - 0, lblCountdown.Height - 0);
-            };
+            lblCountdown.FlatStyle = FlatStyle.Flat;
+
+            string timerImagePath = Path.Combine(Application.StartupPath, "pics", "clock.png");
+            lblCountdown.BackgroundImage = Image.FromFile(timerImagePath);
+            lblCountdown.BackgroundImageLayout = ImageLayout.Stretch;
 
             Controls.Add(lblCountdown);
 
@@ -429,16 +572,18 @@ namespace quizGame
                 Text = currentQuestion.Text,
                 Font = new Font("Showcard Gothic", 20),
                 TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Color.White,
-                BackColor = Color.Black,
-                Size = new Size(500, 150),
-                Location = new Point(50, 150),
+                ForeColor = Color.Black,
+                BackColor = Color.Transparent,
+                Size = new Size(500, 200),
+                Location = new Point(50, 100),
+                Padding = new Padding(10, 10, 10, 10)
             };
 
-            lblQuestion.Paint += (sender, e) =>
-            {
-                e.Graphics.DrawRectangle(new Pen(Color.White, 6), 0, 0, lblQuestion.Width - 0, lblQuestion.Height - 0);
-            };
+            lblCountdown.FlatStyle = FlatStyle.Flat;
+
+            string questionImagePath = Path.Combine(Application.StartupPath, "pics", "question.png");
+            lblQuestion.BackgroundImage = Image.FromFile(questionImagePath);
+            lblQuestion.BackgroundImageLayout = ImageLayout.Stretch;
 
             this.Controls.Add(lblQuestion);
 
@@ -448,19 +593,48 @@ namespace quizGame
                 Text = currentQuestion.Answers[0],
                 TextAlign = ContentAlignment.MiddleCenter,
                 ForeColor = Color.White,
-                BackColor = Color.Black,
+                BackColor = Color.Transparent,
                 Cursor = Cursors.Hand,
-                Font = new Font("Arial", 14),
+                Font = new Font("Showcard Gothic", 14),
                 Size = new Size(200, 100),
                 Location = new Point(50, 500),
                 Tag = 0
             };
 
             btnAnswer1.FlatStyle = FlatStyle.Flat;
-            btnAnswer1.FlatAppearance.BorderSize = 2;
-            btnAnswer1.FlatAppearance.BorderColor = Color.White;
-            btnAnswer1.FlatAppearance.MouseOverBackColor = Color.Gray;
-            btnAnswer1.FlatAppearance.MouseDownBackColor = Color.DarkGray;
+            btnAnswer1.FlatAppearance.BorderSize = 0;
+
+            string btnAnswerDefault = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "default.png");
+            btnAnswer1.BackgroundImage = Image.FromFile(btnAnswerDefault);
+            btnAnswer1.BackgroundImageLayout = ImageLayout.Stretch;
+
+            btnAnswer1.MouseEnter += (s, e) =>
+            {
+                string btnAnswerHover = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "hover.png");
+                btnAnswer1.BackgroundImage = Image.FromFile(btnAnswerHover);
+                btnAnswer1.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnAnswer1.MouseLeave += (s, e) =>
+            {
+                string btnAnswerDefault = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "default.png");
+                btnAnswer1.BackgroundImage = Image.FromFile(btnAnswerDefault);
+                btnAnswer1.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnAnswer1.MouseDown += (s, e) =>
+            {
+                string btnAnswerClick = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "click.png");
+                btnAnswer1.BackgroundImage = Image.FromFile(btnAnswerClick);
+                btnAnswer1.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnAnswer1.MouseUp += (s, e) =>
+            {
+                string btnAnswerHover = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "hover.png");
+                btnAnswer1.BackgroundImage = Image.FromFile(btnAnswerHover);
+                btnAnswer1.BackgroundImageLayout = ImageLayout.Stretch;
+            };
 
             btnAnswer1.Click += AnswerButton_Click;
             this.Controls.Add(btnAnswer1);
@@ -470,19 +644,48 @@ namespace quizGame
                 Text = currentQuestion.Answers[1],
                 TextAlign = ContentAlignment.MiddleCenter,
                 ForeColor = Color.White,
-                BackColor = Color.Black,
+                BackColor = Color.Transparent,
                 Cursor = Cursors.Hand,
-                Font = new Font("Arial", 14),
+                Font = new Font("Showcard Gothic", 14),
                 Size = new Size(200, 100),
                 Location = new Point(50, 650),
                 Tag = 1
             };
 
             btnAnswer2.FlatStyle = FlatStyle.Flat;
-            btnAnswer2.FlatAppearance.BorderSize = 2;
-            btnAnswer2.FlatAppearance.BorderColor = Color.White;
-            btnAnswer2.FlatAppearance.MouseOverBackColor = Color.Gray;
-            btnAnswer2.FlatAppearance.MouseDownBackColor = Color.DarkGray;
+            btnAnswer2.FlatAppearance.BorderSize = 0;
+
+            btnAnswerDefault = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "default.png");
+            btnAnswer2.BackgroundImage = Image.FromFile(btnAnswerDefault);
+            btnAnswer2.BackgroundImageLayout = ImageLayout.Stretch;
+
+            btnAnswer2.MouseEnter += (s, e) =>
+            {
+                string btnAnswerHover = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "hover.png");
+                btnAnswer2.BackgroundImage = Image.FromFile(btnAnswerHover);
+                btnAnswer2.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnAnswer2.MouseLeave += (s, e) =>
+            {
+                string btnAnswerDefault = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "default.png");
+                btnAnswer2.BackgroundImage = Image.FromFile(btnAnswerDefault);
+                btnAnswer2.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnAnswer2.MouseDown += (s, e) =>
+            {
+                string btnAnswerClick = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "click.png");
+                btnAnswer2.BackgroundImage = Image.FromFile(btnAnswerClick);
+                btnAnswer2.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnAnswer2.MouseUp += (s, e) =>
+            {
+                string btnAnswerHover = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "hover.png");
+                btnAnswer2.BackgroundImage = Image.FromFile(btnAnswerHover);
+                btnAnswer2.BackgroundImageLayout = ImageLayout.Stretch;
+            };
 
             btnAnswer2.Click += AnswerButton_Click;
             this.Controls.Add(btnAnswer2);
@@ -494,17 +697,46 @@ namespace quizGame
                 ForeColor = Color.White,
                 BackColor = Color.Black,
                 Cursor = Cursors.Hand,
-                Font = new Font("Arial", 14),
+                Font = new Font("Showcard Gothic", 14),
                 Size = new Size(200, 100),
                 Location = new Point(350, 500),
                 Tag = 2
             };
 
             btnAnswer3.FlatStyle = FlatStyle.Flat;
-            btnAnswer3.FlatAppearance.BorderSize = 2;
-            btnAnswer3.FlatAppearance.BorderColor = Color.White;
-            btnAnswer3.FlatAppearance.MouseOverBackColor = Color.Gray;
-            btnAnswer3.FlatAppearance.MouseDownBackColor = Color.DarkGray;
+            btnAnswer3.FlatAppearance.BorderSize = 0;
+
+            btnAnswerDefault = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "default.png");
+            btnAnswer3.BackgroundImage = Image.FromFile(btnAnswerDefault);
+            btnAnswer3.BackgroundImageLayout = ImageLayout.Stretch;
+
+            btnAnswer3.MouseEnter += (s, e) =>
+            {
+                string btnAnswerHover = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "hover.png");
+                btnAnswer3.BackgroundImage = Image.FromFile(btnAnswerHover);
+                btnAnswer3.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnAnswer3.MouseLeave += (s, e) =>
+            {
+                string btnAnswerDefault = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "default.png");
+                btnAnswer3.BackgroundImage = Image.FromFile(btnAnswerDefault);
+                btnAnswer3.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnAnswer3.MouseDown += (s, e) =>
+            {
+                string btnAnswerClick = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "click.png");
+                btnAnswer3.BackgroundImage = Image.FromFile(btnAnswerClick);
+                btnAnswer3.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnAnswer3.MouseUp += (s, e) =>
+            {
+                string btnAnswerHover = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "hover.png");
+                btnAnswer3.BackgroundImage = Image.FromFile(btnAnswerHover);
+                btnAnswer3.BackgroundImageLayout = ImageLayout.Stretch;
+            };
 
             btnAnswer3.Click += AnswerButton_Click;
             this.Controls.Add(btnAnswer3);
@@ -514,18 +746,48 @@ namespace quizGame
                 Text = currentQuestion.Answers[3],
                 TextAlign = ContentAlignment.MiddleCenter,
                 ForeColor = Color.White,
-                BackColor = Color.Black,
+                BackColor = Color.Transparent,
                 Cursor = Cursors.Hand,
-                Font = new Font("Arial", 14),
+                Font = new Font("Showcard Gothic", 14),
                 Size = new Size(200, 100),
                 Location = new Point(350, 650),
                 Tag = 3
             };
+
             btnAnswer4.FlatStyle = FlatStyle.Flat;
-            btnAnswer4.FlatAppearance.BorderSize = 2;
-            btnAnswer4.FlatAppearance.BorderColor = Color.White;
-            btnAnswer4.FlatAppearance.MouseOverBackColor = Color.Gray;
-            btnAnswer4.FlatAppearance.MouseDownBackColor = Color.DarkGray;
+            btnAnswer4.FlatAppearance.BorderSize = 0;
+
+            btnAnswerDefault = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "default.png");
+            btnAnswer4.BackgroundImage = Image.FromFile(btnAnswerDefault);
+            btnAnswer4.BackgroundImageLayout = ImageLayout.Stretch;
+
+            btnAnswer4.MouseEnter += (s, e) =>
+            {
+                string btnAnswerHover = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "hover.png");
+                btnAnswer4.BackgroundImage = Image.FromFile(btnAnswerHover);
+                btnAnswer4.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnAnswer4.MouseLeave += (s, e) =>
+            {
+                string btnAnswerDefault = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "default.png");
+                btnAnswer4.BackgroundImage = Image.FromFile(btnAnswerDefault);
+                btnAnswer4.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnAnswer4.MouseDown += (s, e) =>
+            {
+                string btnAnswerClick = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "click.png");
+                btnAnswer4.BackgroundImage = Image.FromFile(btnAnswerClick);
+                btnAnswer4.BackgroundImageLayout = ImageLayout.Stretch;
+            };
+
+            btnAnswer4.MouseUp += (s, e) =>
+            {
+                string btnAnswerHover = Path.Combine(Application.StartupPath, "pics", "btnAnswer", "hover.png");
+                btnAnswer4.BackgroundImage = Image.FromFile(btnAnswerHover);
+                btnAnswer4.BackgroundImageLayout = ImageLayout.Stretch;
+            };
 
             btnAnswer4.Click += AnswerButton_Click;
             this.Controls.Add(btnAnswer4);
@@ -545,7 +807,7 @@ namespace quizGame
                     string basePath = AppDomain.CurrentDomain.BaseDirectory;
                     string soundFilePath = Path.Combine(basePath, "audios", "correct.wav");
                     SoundPlayer player = new SoundPlayer(soundFilePath);
-                    player.PlaySync();
+                    player.Play();
                 }
                 catch
                 {
@@ -560,7 +822,7 @@ namespace quizGame
                     string basePath = AppDomain.CurrentDomain.BaseDirectory;
                     string soundFilePath = Path.Combine(basePath, "audios", "wrong.wav");
                     SoundPlayer player = new SoundPlayer(soundFilePath);
-                    player.PlaySync();
+                    player.Play();
                 }
                 catch
                 {
@@ -592,7 +854,7 @@ namespace quizGame
                     string basePath = AppDomain.CurrentDomain.BaseDirectory;
                     string soundFilePath = Path.Combine(basePath, "audios", "time.wav");
                     SoundPlayer player = new SoundPlayer(soundFilePath);
-                    player.PlaySync();
+                    player.Play();
                 }
                 catch
                 {
